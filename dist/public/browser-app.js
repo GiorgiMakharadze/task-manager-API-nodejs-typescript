@@ -8,11 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const axios_1 = __importDefault(require("axios"));
 const tasksDOM = document.querySelector(".tasks");
 const loadingDOM = document.querySelector(".loading-text");
 const formDOM = document.querySelector(".task-form");
@@ -22,7 +17,7 @@ const formAlertDOM = document.querySelector(".form-alert");
 const showTasks = () => __awaiter(void 0, void 0, void 0, function* () {
     loadingDOM.style.visibility = "visible";
     try {
-        const { data: { tasks }, } = yield axios_1.default.get("/api/v1/tasks");
+        const { data: { tasks }, } = yield axios.get("/api/v1/tasks");
         if (tasks.length < 1) {
             tasksDOM.innerHTML = '<h5 class="empty-list">No tasks in your list</h5>';
             loadingDOM.style.visibility = "hidden";
@@ -65,7 +60,7 @@ tasksDOM.addEventListener("click", (e) => __awaiter(void 0, void 0, void 0, func
         loadingDOM.style.visibility = "visible";
         const id = el.parentElement.dataset.id;
         try {
-            yield axios_1.default.delete(`/api/v1/tasks/${id}`);
+            yield axios.delete(`/api/v1/tasks/${id}`);
             showTasks();
         }
         catch (error) {
@@ -79,7 +74,7 @@ formDOM.addEventListener("submit", (e) => __awaiter(void 0, void 0, void 0, func
     e.preventDefault();
     const name = taskInputDOM.value;
     try {
-        yield axios_1.default.post("/api/v1/tasks", { name });
+        yield axios.post("/api/v1/tasks", { name });
         showTasks();
         taskInputDOM.value = "";
         formAlertDOM.style.display = "block";

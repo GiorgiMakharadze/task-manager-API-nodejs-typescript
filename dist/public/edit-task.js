@@ -21,16 +21,16 @@ const editBtnDOM = document.querySelector(".task-edit-btn");
 const formAlertDOM = document.querySelector(".form-alert");
 const params = window.location.search;
 const id = new URLSearchParams(params).get("id");
-let tempName = "";
+let tempName;
 const showTask = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { data: { task }, } = yield axios_1.default.get(`/api/v1/tasks/${id}`);
         const { _id: taskID, completed, name } = task;
-        taskIDDOM === null || taskIDDOM === void 0 ? void 0 : taskIDDOM.textContent = taskID;
-        taskNameDOM === null || taskNameDOM === void 0 ? void 0 : taskNameDOM.value = name;
+        taskIDDOM.textContent = taskID;
+        taskNameDOM.value = name;
         tempName = name;
         if (completed) {
-            taskCompletedDOM === null || taskCompletedDOM === void 0 ? void 0 : taskCompletedDOM.checked = true;
+            taskCompletedDOM.checked = true;
         }
     }
     catch (error) {
@@ -38,47 +38,36 @@ const showTask = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 showTask();
-editFormDOM === null || editFormDOM === void 0 ? void 0 : editFormDOM.addEventListener("submit", (e) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
-    if (!editBtnDOM)
-        return;
+editFormDOM.addEventListener("submit", (e) => __awaiter(void 0, void 0, void 0, function* () {
     editBtnDOM.textContent = "Loading...";
     e.preventDefault();
     try {
-        const taskName = (_a = taskNameDOM === null || taskNameDOM === void 0 ? void 0 : taskNameDOM.value) !== null && _a !== void 0 ? _a : "";
-        const taskCompleted = (_b = taskCompletedDOM === null || taskCompletedDOM === void 0 ? void 0 : taskCompletedDOM.checked) !== null && _b !== void 0 ? _b : false;
+        const taskName = taskNameDOM.value;
+        const taskCompleted = taskCompletedDOM.checked;
         const { data: { task }, } = yield axios_1.default.patch(`/api/v1/tasks/${id}`, {
             name: taskName,
             completed: taskCompleted,
         });
         const { _id: taskID, completed, name } = task;
-        taskIDDOM === null || taskIDDOM === void 0 ? void 0 : taskIDDOM.textContent = taskID;
-        taskNameDOM === null || taskNameDOM === void 0 ? void 0 : taskNameDOM.value = name;
+        taskIDDOM.textContent = taskID;
+        taskNameDOM.value = name;
         tempName = name;
         if (completed) {
-            taskCompletedDOM === null || taskCompletedDOM === void 0 ? void 0 : taskCompletedDOM.checked = true;
+            taskCompletedDOM.checked = true;
         }
-        if (formAlertDOM) {
-            formAlertDOM.style.display = "block";
-            formAlertDOM.textContent = `success, edited task`;
-            formAlertDOM.classList.add("text-success");
-        }
+        formAlertDOM.style.display = "block";
+        formAlertDOM.textContent = `success, edited task`;
+        formAlertDOM.classList.add("text-success");
     }
     catch (error) {
         console.error(error);
-        taskNameDOM === null || taskNameDOM === void 0 ? void 0 : taskNameDOM.value = tempName;
-        if (formAlertDOM) {
-            formAlertDOM.style.display = "block";
-            formAlertDOM.innerHTML = `error, please try again`;
-        }
+        taskNameDOM.value = tempName;
+        formAlertDOM.style.display = "block";
+        formAlertDOM.innerHTML = `error, please try again`;
     }
-    if (editBtnDOM) {
-        editBtnDOM.textContent = "Edit";
-    }
+    editBtnDOM.textContent = "Edit";
     setTimeout(() => {
-        if (formAlertDOM) {
-            formAlertDOM.style.display = "none";
-            formAlertDOM.classList.remove("text-success");
-        }
+        formAlertDOM.style.display = "none";
+        formAlertDOM.classList.remove("text-success");
     }, 3000);
 }));

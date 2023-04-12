@@ -1,6 +1,7 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { NextFunction } from "express";
 import tasks from "./api/routes/tasks";
 import { connectDB } from "./api/db/connect";
+import { notFound } from "./api/middleware/not-found";
 import "dotenv/config";
 
 const app = express();
@@ -12,6 +13,8 @@ app.use(express.json());
 
 //routes
 app.use("/api/v1/tasks", tasks);
+
+app.use(notFound);
 
 const start = async () => {
   try {

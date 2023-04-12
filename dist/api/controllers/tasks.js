@@ -17,7 +17,7 @@ const task_1 = __importDefault(require("../models/task"));
 const getAllTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const tasks = yield task_1.default.find({});
-        res.status(200).json({ tasks });
+        res.status(200).json({ tasks, amount: tasks.length });
     }
     catch (error) {
         res.status(500).json({ message: error });
