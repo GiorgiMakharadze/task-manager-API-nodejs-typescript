@@ -1,13 +1,32 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTask = exports.updateTask = exports.getTask = exports.createTask = exports.getAllTasks = void 0;
+const task_1 = __importDefault(require("../models/task"));
 const getAllTasks = (req, res) => {
     res.send("all items from the file");
 };
 exports.getAllTasks = getAllTasks;
-const createTask = (req, res) => {
-    res.json(req.body);
-};
+const createTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const task = yield task_1.default.create(req.body);
+        res.status(201).json({ task });
+    }
+    catch (error) {
+        res.status(500).json({ message: error });
+    }
+});
 exports.createTask = createTask;
 const getTask = (req, res) => {
     res.json({ id: req.params.id });
