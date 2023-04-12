@@ -12,11 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTask = exports.updateTask = exports.getTask = exports.createTask = exports.getAllTasks = void 0;
+exports.updateTask = exports.deleteTask = exports.getTask = exports.createTask = exports.getAllTasks = void 0;
 const task_1 = __importDefault(require("../models/task"));
-const getAllTasks = (req, res) => {
-    res.send("all items from the file");
-};
+const getAllTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const tasks = yield task_1.default.find({});
+        res.status(200).json({ tasks });
+    }
+    catch (error) {
+        res.status(500).json({ message: error });
+    }
+});
 exports.getAllTasks = getAllTasks;
 const createTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -28,15 +34,45 @@ const createTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.createTask = createTask;
-const getTask = (req, res) => {
-    res.json({ id: req.params.id });
-};
+const getTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id: taskID } = req.params;
+        const task = yield task_1.default.findOne({ _id: taskID });
+        if (!task) {
+            return res.status(404).json({ message: `No task with id : ${taskID}` });
+        }
+        res.status(200).json({ task });
+    }
+    catch (error) {
+        res.status(500).json({ message: error });
+    }
+});
 exports.getTask = getTask;
-const updateTask = (req, res) => {
-    res.send("update task");
-};
-exports.updateTask = updateTask;
-const deleteTask = (req, res) => {
-    res.send("delete task");
-};
+const deleteTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id: taskID } = req.params;
+        const task = yield task_1.default.findOneAndDelete({ _id: taskID });
+        if (!task) {
+            return res.status(404).json({ message: `No task with id : ${taskID}` });
+        }
+        res.status(200).json({ task });
+    }
+    catch (error) {
+        res.status(500).json({ message: error });
+    }
+});
 exports.deleteTask = deleteTask;
+const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id: taskID } = req.params;
+        const task = yield task_1.default.findOneAndUpdate({ _id: taskID }, req.body, {
+            new: true,
+            runValidators: true,
+        });
+        res.status(200).json({ task });
+    }
+    catch (error) {
+        res.status(500).json({ message: error });
+    }
+});
+exports.updateTask = updateTask;
