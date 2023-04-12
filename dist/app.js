@@ -19,11 +19,9 @@ require("dotenv/config");
 const app = (0, express_1.default)();
 const port = 3000 || process.env.PORT;
 //middleware
+app.use(express_1.default.static("./public"));
 app.use(express_1.default.json());
 //routes
-app.get("/hello", (req, res) => {
-    res.send("Task manager");
-});
 app.use("/api/v1/tasks", tasks_1.default);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {

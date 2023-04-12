@@ -20,12 +20,9 @@ const taskInputDOM = document.querySelector(".task-input");
 const formAlertDOM = document.querySelector(".form-alert");
 // Load tasks from /api/tasks
 const showTasks = () => __awaiter(void 0, void 0, void 0, function* () {
-    if (!tasksDOM || !loadingDOM)
-        return;
     loadingDOM.style.visibility = "visible";
     try {
-        const response = yield axios_1.default.get("/api/v1/tasks");
-        const { tasks } = response.data;
+        const { data: { tasks }, } = yield axios_1.default.get("/api/v1/tasks");
         if (tasks.length < 1) {
             tasksDOM.innerHTML = '<h5 class="empty-list">No tasks in your list</h5>';
             loadingDOM.style.visibility = "hidden";
@@ -35,18 +32,21 @@ const showTasks = () => __awaiter(void 0, void 0, void 0, function* () {
             .map((task) => {
             const { completed, _id: taskID, name } = task;
             return `<div class="single-task ${completed && "task-completed"}">
-          <h5><span><i class="far fa-check-circle"></i></span>${name}</h5>
-          <div class="task-links">
-            <!-- edit link -->
-            <a href="task.html?id=${taskID}"  class="edit-link">
-              <i class="fas fa-edit"></i>
-            </a>
-            <!-- delete btn -->
-            <button type="button" class="delete-btn" data-id="${taskID}">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>`;
+<h5><span><i class="far fa-check-circle"></i></span>${name}</h5>
+<div class="task-links">
+
+
+
+<!-- edit link -->
+<a href="task.html?id=${taskID}"  class="edit-link">
+<i class="fas fa-edit"></i>
+</a>
+<!-- delete btn -->
+<button type="button" class="delete-btn" data-id="${taskID}">
+<i class="fas fa-trash"></i>
+</button>
+</div>
+</div>`;
         })
             .join("");
         tasksDOM.innerHTML = allTasks;
@@ -59,47 +59,39 @@ const showTasks = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 showTasks();
 // delete task /api/tasks/:id
-if (tasksDOM) {
-    tasksDOM.addEventListener("click", (e) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a;
-        const el = e.target;
-        if ((_a = el.parentElement) === null || _a === void 0 ? void 0 : _a.classList.contains("delete-btn")) {
-            if (!loadingDOM)
-                return;
-            loadingDOM.style.visibility = "visible";
-            const id = el.parentElement.dataset.id;
-            try {
-                yield axios_1.default.delete(`/api/v1/tasks/${id}`);
-                showTasks();
-            }
-            catch (error) {
-                console.log(error);
-            }
-        }
-        if (loadingDOM)
-            loadingDOM.style.visibility = "hidden";
-    }));
-}
-// form
-if (formDOM && taskInputDOM && formAlertDOM) {
-    formDOM.addEventListener("submit", (e) => __awaiter(void 0, void 0, void 0, function* () {
-        e.preventDefault();
-        const name = taskInputDOM.value;
+tasksDOM.addEventListener("click", (e) => __awaiter(void 0, void 0, void 0, function* () {
+    const el = e.target;
+    if (el.parentElement.classList.contains("delete-btn")) {
+        loadingDOM.style.visibility = "visible";
+        const id = el.parentElement.dataset.id;
         try {
-            yield axios_1.default.post("/api/v1/tasks", { name });
+            yield axios_1.default.delete(`/api/v1/tasks/${id}`);
             showTasks();
-            taskInputDOM.value = "";
-            formAlertDOM.style.display = "block";
-            formAlertDOM.textContent = `success, task added`;
-            formAlertDOM.classList.add("text-success");
         }
         catch (error) {
-            formAlertDOM.style.display = "block";
-            formAlertDOM.innerHTML = `error, please try again`;
+            console.log(error);
         }
-        setTimeout(() => {
-            formAlertDOM.style.display = "none";
-            formAlertDOM.classList.remove("text-success");
-        }, 3000);
-    }));
-}
+    }
+    loadingDOM.style.visibility = "hidden";
+}));
+// form
+formDOM.addEventListener("submit", (e) => __awaiter(void 0, void 0, void 0, function* () {
+    e.preventDefault();
+    const name = taskInputDOM.value;
+    try {
+        yield axios_1.default.post("/api/v1/tasks", { name });
+        showTasks();
+        taskInputDOM.value = "";
+        formAlertDOM.style.display = "block";
+        formAlertDOM.textContent = `success, task added`;
+        formAlertDOM.classList.add("text-success");
+    }
+    catch (error) {
+        formAlertDOM.style.display = "block";
+        formAlertDOM.innerHTML = `error, please try again`;
+    }
+    setTimeout(() => {
+        formAlertDOM.style.display = "none";
+        formAlertDOM.classList.remove("text-success");
+    }, 3000);
+}));

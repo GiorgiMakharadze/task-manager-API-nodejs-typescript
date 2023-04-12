@@ -7,13 +7,10 @@ const app = express();
 const port = 3000 || process.env.PORT;
 
 //middleware
+app.use(express.static("./public"));
 app.use(express.json());
 
 //routes
-app.get("/hello", (req: Request, res: Response) => {
-  res.send("Task manager");
-});
-
 app.use("/api/v1/tasks", tasks);
 
 const start = async () => {
