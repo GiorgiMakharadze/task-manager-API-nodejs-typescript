@@ -1,7 +1,8 @@
-import express, { NextFunction } from "express";
+import express from "express";
 import tasks from "./api/routes/tasks";
 import { connectDB } from "./api/db/connect";
 import { notFound } from "./api/middleware/not-found";
+import { errorHandlerMiddleware } from "./api/middleware/error-handler";
 import "dotenv/config";
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use("/api/v1/tasks", tasks);
 
 app.use(notFound);
+app.use(errorHandlerMiddleware);
 
 const start = async () => {
   try {
