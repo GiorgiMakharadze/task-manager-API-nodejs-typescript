@@ -5,11 +5,11 @@ export const getAllTasks = (req: Request, res: Response) => {
 };
 
 export const createTask = (req: Request, res: Response) => {
-  res.send("create task");
+  res.json(req.body);
 };
 
 export const getTask = (req: Request, res: Response) => {
-  res.send("get single task");
+  res.json({ id: req.params.id });
 };
 
 export const updateTask = (req: Request, res: Response) => {

@@ -6,11 +6,11 @@ const getAllTasks = (req, res) => {
 };
 exports.getAllTasks = getAllTasks;
 const createTask = (req, res) => {
-    res.send("create task");
+    res.json(req.body);
 };
 exports.createTask = createTask;
 const getTask = (req, res) => {
-    res.send("get single task");
+    res.json({ id: req.params.id });
 };
 exports.getTask = getTask;
 const updateTask = (req, res) => {

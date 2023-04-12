@@ -1,5 +1,8 @@
 import express, { Request, Response, NextFunction } from "express";
 import tasks from "./api/routes/tasks";
+import { connectDB } from "./api/db/connect";
+import "dotenv/config";
+
 const app = express();
 const port = 3000 || process.env.PORT;
 
@@ -13,6 +16,15 @@ app.get("/hello", (req: Request, res: Response) => {
 
 app.use("/api/v1/tasks", tasks);
 
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
-});
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URI!);
+    app.listen(port, () => {
+      console.log(`Server is listening on port ${port}`);
+    });
+  } catch (error: Error | any) {
+    console.log(error.message);
+  }
+};
+
+start();
