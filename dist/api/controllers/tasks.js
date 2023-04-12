@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTask = exports.deleteTask = exports.getTask = exports.createTask = exports.getAllTasks = void 0;
 const async_1 = require("../middleware/async");
+const custom_error_1 = require("../../errors/custom-error");
 const task_1 = __importDefault(require("../models/task"));
 exports.getAllTasks = (0, async_1.asyncWrapper)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const tasks = yield task_1.default.find({});
@@ -23,27 +24,30 @@ exports.createTask = (0, async_1.asyncWrapper)((req, res) => __awaiter(void 0, v
     const task = yield task_1.default.create(req.body);
     res.status(201).json({ task });
 }));
-exports.getTask = (0, async_1.asyncWrapper)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getTask = (0, async_1.asyncWrapper)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id: taskID } = req.params;
     const task = yield task_1.default.findOne({ _id: taskID });
     if (!task) {
-        return res.status(404).json({ message: `No task with id : ${taskID}` });
+        return next((0, custom_error_1.createCustomError)(`No task with id : ${taskID}`, 404));
     }
     res.status(200).json({ task });
 }));
-exports.deleteTask = (0, async_1.asyncWrapper)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deleteTask = (0, async_1.asyncWrapper)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id: taskID } = req.params;
     const task = yield task_1.default.findOneAndDelete({ _id: taskID });
     if (!task) {
-        return res.status(404).json({ message: `No task with id : ${taskID}` });
+        return next((0, custom_error_1.createCustomError)(`No task with id : ${taskID}`, 404));
     }
     res.status(200).json({ task });
 }));
-exports.updateTask = (0, async_1.asyncWrapper)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.updateTask = (0, async_1.asyncWrapper)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id: taskID } = req.params;
     const task = yield task_1.default.findOneAndUpdate({ _id: taskID }, req.body, {
         new: true,
         runValidators: true,
     });
+    if (!task) {
+        return next((0, custom_error_1.createCustomError)(`No task with id : ${taskID}`, 404));
+    }
     res.status(200).json({ task });
 }));
