@@ -13,16 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const morgan_1 = __importDefault(require("morgan"));
 const tasks_1 = __importDefault(require("./api/routes/tasks"));
 const connect_1 = require("./api/db/connect");
 const not_found_1 = require("./api/middleware/not-found");
 const error_handler_1 = require("./api/middleware/error-handler");
 require("dotenv/config");
 const app = (0, express_1.default)();
-const port = 3000 || process.env.PORT;
+const port = process.env.PORT || 3000;
 //middleware
 app.use(express_1.default.static("./public"));
 app.use(express_1.default.json());
+app.use((0, morgan_1.default)("dev"));
 //routes
 app.use("/api/v1/tasks", tasks_1.default);
 app.use(not_found_1.notFound);
