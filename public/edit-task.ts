@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { Task } from "../types/taskTypes";
 
 const taskIDDOM: HTMLSpanElement | null | any =
   document.querySelector(".task-edit-id");
@@ -16,12 +17,6 @@ const formAlertDOM: HTMLDivElement | null | any =
 const params: string = window.location.search;
 const id: string | number | null = new URLSearchParams(params).get("id");
 let tempName: string;
-
-interface Task {
-  _id: string;
-  completed: boolean;
-  name: string;
-}
 
 const showTask = async () => {
   try {

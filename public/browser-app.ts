@@ -1,16 +1,5 @@
 import axios from "axios";
-
-interface Task {
-  _id: string;
-  name: string;
-  completed: boolean;
-}
-
-interface TasksResponse {
-  data: {
-    tasks: Task[];
-  };
-}
+import { Task, TasksResponse } from "../types/taskTypes";
 
 const tasksDOM: HTMLElement | null = document.querySelector(".tasks");
 const loadingDOM: HTMLElement | null = document.querySelector(".loading-text");

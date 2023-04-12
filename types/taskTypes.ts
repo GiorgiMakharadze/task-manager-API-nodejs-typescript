@@ -3,3 +3,9 @@ export interface Task {
   completed: boolean;
   name: string;
 }
+
+export interface TasksResponse {
+  data: {
+    tasks: Task[];
+  };
+}
